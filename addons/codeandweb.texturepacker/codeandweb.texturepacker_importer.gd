@@ -25,12 +25,8 @@ extends EditorPlugin
 
 var import_plugin_spritesheet = null
 
-func get_name():
-	return "TexturePacker Importer"
-
-
 func _enter_tree():
-	import_plugin_spritesheet = preload("res://addons/codeandweb.texturepacker/texturepacker_import_spritesheet.gd").new()
+	import_plugin_spritesheet = preload("texturepacker_import_spritesheet.gd").new()
 	add_import_plugin(import_plugin_spritesheet)
 
 

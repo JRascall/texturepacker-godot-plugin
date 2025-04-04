@@ -10,9 +10,7 @@ Use the version from the **godot-3** branch if your are using Godot 3.
 
 ## Installation
 
-Simply download it from [Godot Asset Library](https://godotengine.org/asset-library/asset/1503)
-
-Alternatively, download or clone this repository and copy the contents of the
+Download or clone this repository and copy the contents of the
 `addons` folder to your own project's `addons` folder.
 
 **Important**: Enable the plugin on the Project Settings.
@@ -37,6 +35,10 @@ Alternatively, download or clone this repository and copy the contents of the
 
 
 # Release notes
+
+### 4.1.0 (2025-04-04)
+
+* Upgrade to version 4.4 of godot
 
 ### 4.1.0 (2023-08-28)
 

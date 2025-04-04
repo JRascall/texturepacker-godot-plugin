@@ -23,9 +23,7 @@
 @tool
 extends EditorImportPlugin
 
-
 enum Preset { PRESET_DEFAULT }
-
 
 func _get_importer_name():
 	return "codeandweb.texturepacker_import_spritesheet"
@@ -56,38 +54,40 @@ func _get_preset_name(preset):
 		Preset.PRESET_DEFAULT: return "Default"
 
 
-func _get_import_options(path, preset_index):
+func _get_import_options(_path, _preset_index):
 	return []
 
 
-func _get_option_visibility(path, option_name, options):
+func _get_option_visibility(_path, _option_name, _options):
 	return true
 
 
 func _get_import_order():
 	return 200
 
+
 func _get_priority():
 	return 1.0
 
-func _import(source_file, save_path, options, r_platform_variants, r_gen_files):
-	print("Importing sprite sheet from "+source_file);
+
+func _import(source_file, save_path, _options, r_platform_variants, r_gen_files):
+	print("Importing sprite sheet from " + source_file)
 	
 	var sheets = read_sprite_sheet(source_file)
 	if not sheets:
 		return ERR_PARSE_ERROR
 
-	var sheetFolder = source_file.get_basename()+".sprites"
-	create_folder(sheetFolder)
+	var sheet_folder = source_file.get_basename() + ".sprites"
+	create_folder(sheet_folder)
 
 	for sheet in sheets.textures:
-		var sheetFile = source_file.get_base_dir()+"/"+sheet.image
-		var image = ResourceLoader.load(sheetFile, "ImageTexture")
+		var sheet_file = source_file.get_base_dir() + "/" + sheet.image
+		var image = ResourceLoader.load(sheet_file, "ImageTexture")
 		if not image:
-			printerr("Failed to load image file: " + sheetFile)
+			printerr("Failed to load image file: " + sheet_file)
 			return ERR_FILE_NOT_FOUND
 
-		create_atlas_textures(sheetFolder, sheet, image, r_gen_files)
+		create_atlas_textures(sheet_folder, sheet, image, r_gen_files)
 
 	return ResourceSaver.save(Resource.new(), "%s.%s" % [save_path, _get_save_extension()])
 
@@ -99,15 +99,15 @@ func create_folder(folder):
 			printerr("Failed to create folder: " + folder)
 
 
-func create_atlas_textures(sheetFolder, sheet, image, r_gen_files):
+func create_atlas_textures(sheet_folder, sheet, image, r_gen_files):
 	for sprite in sheet.sprites:
-		if !create_atlas_texture(sheetFolder, sprite, image, r_gen_files):
+		if !create_atlas_texture(sheet_folder, sprite, image, r_gen_files):
 			return false
 	return true
 
 
-func create_atlas_texture(sheetFolder, sprite, image, r_gen_files):
-	var name = sheetFolder+"/"+sprite.filename.get_basename()+".tres"
+func create_atlas_texture(sheet_folder, sprite, image, r_gen_files):
+	var name = sheet_folder + "/" + sprite.filename.get_basename() + ".tres"
 	var texture
 	if ResourceLoader.exists(name, "AtlasTexture"):
 		texture = ResourceLoader.load(name, "AtlasTexture")
@@ -126,19 +126,19 @@ func save_resource(name, texture):
 	
 	var status = ResourceSaver.save(texture, name)
 	if status != OK:
-		printerr("Failed to save resource "+name)
+		printerr("Failed to save resource " + name)
 		return false
 	return true
 
 
-func read_sprite_sheet(fileName):
-	var file = FileAccess.open(fileName, FileAccess.READ)
+func read_sprite_sheet(file_name):
+	var file = FileAccess.open(file_name, FileAccess.READ)
 	if not file:
-		printerr("Failed to load "+fileName)
+		printerr("Failed to load " + file_name)
 		return null
 		
 	var text = file.get_as_text()
 	var dict = JSON.parse_string(text)
 	if dict == null:
-		printerr("Invalid json data in "+fileName)
+		printerr("Invalid json data in " + file_name)
 	return dict
